@@ -80,10 +80,12 @@
                 <button onclick="generateKeys()" class="w-full">點我產生新金鑰</button>
                 
                 <div id="key-display" class="hidden mt-6 space-y-4">
-                    <div class="relative">
+                    <div class="space-y-2">
                         <label class="key-label">公鑰 (發送到群組)</label>
-                        <textarea id="pub-key" readonly rows="3" class="pr-16"></textarea>
-                        <button onclick="copy('pub-key')" class="absolute top-6 right-2 py-1 px-2 text-[10px] bg-white hover:bg-black hover:text-white border-2 border-black transition-colors">複製</button>
+                        <div class="flex gap-2">
+                            <textarea id="pub-key" readonly rows="2" class="flex-1"></textarea>
+                            <button onclick="copy('pub-key')" class="whitespace-nowrap px-4 bg-white hover:bg-black hover:text-white border-2 border-black transition-colors font-bold text-sm">複製</button>
+                        </div>
                     </div>
                     <div class="p-4 bg-red-50 border-2 border-dashed border-red-200">
                         <label class="key-label text-red-600">私鑰 (已自動暫存，請勿重新整理網頁)</label>
