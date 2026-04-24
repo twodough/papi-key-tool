@@ -121,7 +121,7 @@
             const keyPair = await window.crypto.subtle.generateKey(
                 {
                     name: "RSA-OAEP",
-                    modulusLength: 512, // Lowest possible for Web Crypto RSA, makes keys very short
+                    modulusLength: 1024, // 512 is too small for SHA-256 padding, 1024 is the minimum viable
                     publicExponent: new Uint8Array([1, 0, 1]),
                     hash: "SHA-256",
                 },
