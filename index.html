@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>怕屁遊戲加密工具 🎭</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; }
-        .hidden-tab { display: none; }
-    </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center py-10 px-4">
 
@@ -21,12 +17,11 @@
 
         <!-- Tabs -->
         <div class="flex border-b">
-            <button onclick="showTab('player')" id="btn-player" class="flex-1 py-4 font-medium tab-active">玩家分頁</button>
-            <button onclick="showTab('host')" id="btn-host" class="flex-1 py-4 font-medium text-gray-500 hover:text-blue-500">主持人分頁</button>
+            <div class="flex-1 py-4 font-medium border-b-2 border-blue-500 text-blue-500 text-center">玩家工具</div>
         </div>
 
-        <!-- Player Tab -->
-        <div id="tab-player" class="p-8 space-y-8">
+        <!-- Player Content -->
+        <div class="p-8 space-y-8">
             <!-- Part 1: Generate -->
             <section class="space-y-4">
                 <h2 class="text-lg font-semibold text-gray-800 flex items-center">
@@ -74,46 +69,11 @@
                 </div>
             </section>
         </div>
-
-        <!-- Host Tab -->
-        <div id="tab-host" class="p-8 hidden-tab space-y-6">
-            <h2 class="text-xl font-bold text-gray-800">主持人工具區</h2>
-            <p class="text-sm text-gray-600">貼上所有人的公鑰，系統會隨機抽出一名兇手並生成每個人專屬的加密文字。</p>
-            
-            <div id="host-inputs" class="space-y-3">
-                <div class="flex space-x-2 player-input-row">
-                    <input placeholder="玩家姓名" class="flex-none w-24 border rounded-lg px-3 py-2 text-sm">
-                    <input placeholder="貼上該玩家的公鑰" class="flex-1 border rounded-lg px-3 py-2 text-sm font-mono">
-                </div>
-            </div>
-            
-            <div class="flex space-x-2">
-                <button onclick="addPlayerRow()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 rounded-lg">+ 增加玩家</button>
-                <button onclick="generateGame()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg shadow-md">決定兇手並加密</button>
-            </div>
-
-            <div id="host-result" class="hidden space-y-4">
-                <label class="text-sm font-bold text-gray-700">加密結果 (直接整段複製到群組)：</label>
-                <div class="relative">
-                    <textarea id="host-output" readonly class="w-full h-64 text-xs font-mono bg-gray-900 text-green-400 rounded-lg p-4"></textarea>
-                    <button onclick="copy('host-output')" class="absolute top-2 right-2 bg-gray-700 text-white px-2 py-1 text-xs rounded hover:bg-gray-600">複製整段</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <p class="mt-8 text-gray-400 text-xs">Made with ❤️ by 土豆妹 for 土豆小姐</p>
 
     <script>
-        // Tab switching
-        function showTab(tab) {
-            const isPlayer = tab === 'player';
-            document.getElementById('tab-player').classList.toggle('hidden-tab', !isPlayer);
-            document.getElementById('tab-host').classList.toggle('hidden-tab', isPlayer);
-            document.getElementById('btn-player').className = isPlayer ? 'flex-1 py-4 font-medium tab-active' : 'flex-1 py-4 font-medium text-gray-500 hover:text-blue-500';
-            document.getElementById('btn-host').className = !isPlayer ? 'flex-1 py-4 font-medium tab-active' : 'flex-1 py-4 font-medium text-gray-500 hover:text-blue-500';
-        }
-
         // Key Utils
         async function generateKeys() {
             const name = document.getElementById('player-name').value.trim();
@@ -133,7 +93,6 @@
             const pubJwk = await window.crypto.subtle.exportKey("jwk", keyPair.publicKey);
             const privJwk = await window.crypto.subtle.exportKey("jwk", keyPair.privateKey);
 
-            // Simple serialization: Base64 of JSON
             document.getElementById('pub-key').value = btoa(JSON.stringify({ n: name, k: pubJwk }));
             document.getElementById('priv-key').value = btoa(JSON.stringify(privJwk));
             document.getElementById('key-display').classList.remove('hidden');
@@ -178,69 +137,6 @@
                 console.error(e);
                 alert('解密失敗，請檢查私鑰或加密訊息是否正確！');
             }
-        }
-
-        // Host logic
-        function addPlayerRow() {
-            const container = document.getElementById('host-inputs');
-            const div = document.createElement('div');
-            div.className = "flex space-x-2 player-input-row";
-            div.innerHTML = `
-                <input placeholder="玩家姓名" class="flex-none w-24 border rounded-lg px-3 py-2 text-sm">
-                <input placeholder="貼上該玩家的公鑰" class="flex-1 border rounded-lg px-3 py-2 text-sm font-mono">
-            `;
-            container.appendChild(div);
-        }
-
-        async function generateGame() {
-            const rows = document.querySelectorAll('.player-input-row');
-            const players = [];
-            for (let row of rows) {
-                const inputs = row.querySelectorAll('input');
-                const name = inputs[0].value.trim();
-                const pubRaw = inputs[1].value.trim();
-                if (name && pubRaw) {
-                    players.push({ name, pubRaw });
-                }
-            }
-
-            if (players.length < 2) return alert('至少需要兩位玩家！');
-
-            // Randomly pick one killer
-            const killerIndex = Math.floor(Math.random() * players.length);
-            let output = "🎭 怕屁加密身分名單 🎭\n請複製自己的代碼到工具解密：\n\n";
-
-            for (let i = 0; i < players.length; i++) {
-                const isKiller = i === killerIndex;
-                const message = isKiller ? "你是兇手 😈" : "你是無辜 😇";
-                
-                try {
-                    const pubData = JSON.parse(atob(players[i].pubRaw));
-                    const pubKey = await window.crypto.subtle.importKey(
-                        "jwk",
-                        pubData.k,
-                        { name: "RSA-OAEP", hash: "SHA-256" },
-                        false,
-                        ["encrypt"]
-                    );
-
-                    const encrypted = await window.crypto.subtle.encrypt(
-                        { name: "RSA-OAEP" },
-                        pubKey,
-                        new TextEncoder().encode(message)
-                    );
-
-                    const cipherBase64 = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
-                    output += `${players[i].name}：\n${cipherBase64}\n\n`;
-                } catch (e) {
-                    console.error(e);
-                    alert(`加密玩家 ${players[i].name} 時發生錯誤，請檢查公鑰！`);
-                    return;
-                }
-            }
-
-            document.getElementById('host-output').value = output;
-            document.getElementById('host-result').classList.remove('hidden');
         }
 
         function copy(id) {
