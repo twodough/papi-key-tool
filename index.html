@@ -83,28 +83,28 @@
 
     <div class="app-container">
         <div class="header">
-            <h1>PAPI KEY TOOL</h1>
+            <h1>PAPI 遊戲金鑰工具</h1>
         </div>
 
         <div class="section">
-            <h2>01 / GENERATE KEYS</h2>
-            <button onclick="generateKeys()">Generate New Keys</button>
+            <h2>01 / 產生金鑰</h2>
+            <button onclick="generateKeys()">產生新金鑰</button>
             
             <div id="key-display" class="hidden">
-                <label class="key-label">Public Key (Share this)</label>
+                <label class="key-label">公鑰 (請發送到群組)</label>
                 <textarea id="pub-key" readonly rows="3" onclick="this.select()"></textarea>
                 
-                <label class="key-label private-label">Private Key (Keep this secret)</label>
+                <label class="key-label private-label">私鑰 (❌ 請絕對保密)</label>
                 <textarea id="priv-key" readonly rows="3" onclick="this.select()"></textarea>
             </div>
         </div>
 
         <div class="section">
-            <h2>02 / DECRYPT IDENTITY</h2>
+            <h2>02 / 解密身分</h2>
             <div class="space-y-4">
-                <textarea id="input-priv-key" placeholder="Paste your Private Key" rows="2"></textarea>
-                <textarea id="encrypted-msg" placeholder="Paste encrypted message" rows="2"></textarea>
-                <button onclick="decryptMessage()">Reveal Identity</button>
+                <textarea id="input-priv-key" placeholder="貼上你的私鑰" rows="2"></textarea>
+                <textarea id="encrypted-msg" placeholder="貼上主持人的加密訊息" rows="2"></textarea>
+                <button onclick="decryptMessage()">揭開身分</button>
             </div>
             
             <div id="result-display" class="hidden result-box">
@@ -190,7 +190,7 @@
                 textEl.innerText = text;
             } catch (e) {
                 console.error(e);
-                alert('Invalid Key or Message');
+                alert('金鑰或訊息格式錯誤');
             }
         }
     </script>
