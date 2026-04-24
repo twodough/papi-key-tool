@@ -3,81 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>怕屁遊戲加密工具 🎭</title>
+    <title>Papi Key Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body {
+            font-family: 'JetBrains+Mono', monospace;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container-box {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0px #000;
+        }
+        input, textarea {
+            border: 2px solid #000 !important;
+            border-radius: 0 !important;
+            font-family: 'JetBrains+Mono', monospace;
+        }
+        button {
+            border: 2px solid #000 !important;
+            border-radius: 0 !important;
+            background: #fff;
+            transition: all 0.1s;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #000;
+            color: #fff;
+            transform: translate(-2px, -2px);
+            box-shadow: 2px 2px 0px #555;
+        }
+        button:active {
+            transform: translate(0, 0);
+            box-shadow: none;
+        }
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            background: #eee;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center py-10 px-4">
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
 
-    <div class="max-w-xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
-        <!-- Header -->
-        <div class="bg-blue-600 text-white py-6 px-8 text-center">
-            <h1 class="text-2xl font-bold">怕屁遊戲加密工具 🎭</h1>
-            <p class="text-blue-100 mt-2">只有你自己能解開自己的秘密</p>
+    <div class="container-box">
+        <div class="header">
+            <h1 class="text-xl font-bold">Papi Key Tool</h1>
+            <p class="text-sm mt-1">Asymmetric Encryption for Game Identity</p>
         </div>
 
-        <!-- Tabs -->
-        <div class="flex border-b">
-            <div class="flex-1 py-4 font-medium border-b-2 border-blue-500 text-blue-500 text-center">玩家工具</div>
-        </div>
-
-        <!-- Player Content -->
-        <div class="p-8 space-y-8">
-            <!-- Part 1: Generate -->
+        <div class="p-6 space-y-10">
+            <!-- Step 1: Generate -->
             <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">1</span>
-                    準備階段：產生 Key
-                </h2>
-                <div class="flex space-x-2">
-                    <input id="player-name" type="text" placeholder="輸入你的名字" class="flex-1 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none">
-                    <button onclick="generateKeys()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">產生 Key</button>
+                <h2 class="text-lg font-bold underline">STEP 1: GENERATE KEYS</h2>
+                <div class="flex flex-col space-y-2">
+                    <input id="player-name" type="text" placeholder="Enter your name" class="px-4 py-2 outline-none">
+                    <button onclick="generateKeys()" class="py-2">GENERATE</button>
                 </div>
-                <div id="key-display" class="hidden space-y-4">
-                    <div>
-                        <label class="text-sm font-medium text-gray-600">你的公鑰 (貼到群組)</label>
-                        <div class="relative">
-                            <textarea id="pub-key" readonly class="w-full h-24 text-xs font-mono bg-gray-50 border rounded-lg p-3 mt-1"></textarea>
-                            <button onclick="copy('pub-key')" class="absolute top-2 right-2 bg-white border shadow-sm px-2 py-1 text-xs rounded hover:bg-gray-100">複製</button>
-                        </div>
+                
+                <div id="key-display" class="hidden space-y-4 pt-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase text-gray-500">Public Key (Paste to group)</label>
+                        <textarea id="pub-key" readonly class="w-full h-24 text-xs bg-gray-50 p-2"></textarea>
                     </div>
-                    <div>
-                        <label class="text-sm font-medium text-red-600 font-bold">你的私鑰 (❌ 絕對不要給別人看)</label>
-                        <div class="relative">
-                            <textarea id="priv-key" readonly class="w-full h-24 text-xs font-mono bg-red-50 border border-red-100 rounded-lg p-3 mt-1"></textarea>
-                            <button onclick="copy('priv-key')" class="absolute top-2 right-2 bg-white border shadow-sm px-2 py-1 text-xs rounded hover:bg-gray-100">複製</button>
-                        </div>
-                        <p class="text-xs text-red-500 mt-1 italic">※ 請截圖或複製存好，重新整理網頁就會消失。</p>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase text-red-500 underline">Private Key (KEEP IT SECRET!)</label>
+                        <textarea id="priv-key" readonly class="w-full h-24 text-xs bg-red-50 p-2"></textarea>
                     </div>
                 </div>
             </section>
 
-            <hr>
+            <div class="border-t-2 border-dashed border-gray-300"></div>
 
-            <!-- Part 2: Decrypt -->
+            <!-- Step 2: Decrypt -->
             <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full inline-flex items-center justify-center mr-2">2</span>
-                    解密階段：我是誰？
-                </h2>
+                <h2 class="text-lg font-bold underline">STEP 2: DECRYPT IDENTITY</h2>
                 <div class="space-y-3">
-                    <textarea id="input-priv-key" placeholder="貼上你的私鑰" class="w-full h-20 text-xs font-mono border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-                    <textarea id="encrypted-msg" placeholder="貼上主持人在群組給你的加密訊息" class="w-full h-20 text-xs font-mono border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-                    <button onclick="decryptMessage()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition">揭開身分</button>
+                    <textarea id="input-priv-key" placeholder="Paste your Private Key" class="w-full h-20 text-xs p-2 outline-none"></textarea>
+                    <textarea id="encrypted-msg" placeholder="Paste the encrypted message from Host" class="w-full h-20 text-xs p-2 outline-none"></textarea>
+                    <button onclick="decryptMessage()" class="w-full py-3 bg-gray-100">REVEAL IDENTITY</button>
                 </div>
-                <div id="result-display" class="hidden text-center p-6 rounded-xl border-2 border-dashed">
-                    <div id="result-text" class="text-3xl font-black"></div>
+                
+                <div id="result-display" class="hidden text-center p-6 border-4 border-double border-black bg-yellow-50">
+                    <div id="result-text" class="text-2xl font-bold italic"></div>
                 </div>
             </section>
         </div>
     </div>
 
-    <p class="mt-8 text-gray-400 text-xs">Made with ❤️ by 土豆妹 for 土豆小姐</p>
+    <p class="mt-8 text-gray-500 text-xs font-mono">twodough/papi-key-tool</p>
 
     <script>
-        // Key Utils
+        // UTF-8 safe btoa/atob
+        function utob(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+        function btou(str) {
+            return decodeURIComponent(escape(atob(str)));
+        }
+
         async function generateKeys() {
             const name = document.getElementById('player-name').value.trim();
-            if (!name) return alert('請先輸入名字！');
+            if (!name) return alert('Name required!');
 
             const keyPair = await window.crypto.subtle.generateKey(
                 {
@@ -93,8 +124,8 @@
             const pubJwk = await window.crypto.subtle.exportKey("jwk", keyPair.publicKey);
             const privJwk = await window.crypto.subtle.exportKey("jwk", keyPair.privateKey);
 
-            document.getElementById('pub-key').value = btoa(JSON.stringify({ n: name, k: pubJwk }));
-            document.getElementById('priv-key').value = btoa(JSON.stringify(privJwk));
+            document.getElementById('pub-key').value = utob(JSON.stringify({ n: name, k: pubJwk }));
+            document.getElementById('priv-key').value = utob(JSON.stringify(privJwk));
             document.getElementById('key-display').classList.remove('hidden');
         }
 
@@ -102,9 +133,9 @@
             try {
                 const privRaw = document.getElementById('input-priv-key').value.trim();
                 const cipherRaw = document.getElementById('encrypted-msg').value.trim();
-                if (!privRaw || !cipherRaw) return alert('請輸入私鑰和加密訊息！');
+                if (!privRaw || !cipherRaw) return alert('Missing keys or message!');
 
-                const privJwk = JSON.parse(atob(privRaw));
+                const privJwk = JSON.parse(btou(privRaw));
                 const cipherBytes = new Uint8Array(atob(cipherRaw).split("").map(c => c.charCodeAt(0)));
 
                 const privKey = await window.crypto.subtle.importKey(
@@ -127,26 +158,10 @@
                 
                 display.classList.remove('hidden');
                 textEl.innerText = text;
-                
-                if (text.includes('兇手')) {
-                    display.className = "text-center p-6 rounded-xl border-2 border-dashed border-red-500 bg-red-50 text-red-600";
-                } else {
-                    display.className = "text-center p-6 rounded-xl border-2 border-dashed border-green-500 bg-green-50 text-green-600";
-                }
             } catch (e) {
                 console.error(e);
-                alert('解密失敗，請檢查私鑰或加密訊息是否正確！');
+                alert('Decryption failed! Please check your keys.');
             }
-        }
-
-        function copy(id) {
-            const el = document.getElementById(id);
-            el.select();
-            document.execCommand('copy');
-            const btn = event.target;
-            const originalText = btn.innerText;
-            btn.innerText = '已複製!';
-            setTimeout(() => btn.innerText = originalText, 2000);
         }
     </script>
 </body>
